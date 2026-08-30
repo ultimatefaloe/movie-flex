@@ -11,6 +11,7 @@ const baseMovies: Movie[] = [
     overview: "Earth's mightiest heroes must come together to save the world from destruction.",
     vote_average: 8.5,
     vote_count: 15000,
+    genre: ["Action", "Adventure", "Sci-Fi"],
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const baseMovies: Movie[] = [
     overview: "A reclusive romance novelist on a book tour with her cover model gets swept up in a kidnapping attempt.",
     vote_average: 7.2,
     vote_count: 4500,
+    genre: ["Action", "Adventure", "Comedy"],
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ const baseMovies: Movie[] = [
     overview: "A heartwarming tale of a dog and his owner's journey across the country.",
     vote_average: 7.8,
     vote_count: 3200,
+    genre: ["Drama", "Family", "Adventure"],
   },
   {
     id: 4,
@@ -41,6 +44,7 @@ const baseMovies: Movie[] = [
     overview: "A new theme park is built on the original site of Jurassic Park.",
     vote_average: 8.3,
     vote_count: 12000,
+    genre: ["Action", "Adventure", "Sci-Fi"],
   },
 ];
 

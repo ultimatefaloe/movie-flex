@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, View, Text, Dimensions } from "react-native";
-import MaskedView from "@react-native-masked-view/masked-view";
 import { colors, images } from "../constant";
 import { Movie } from "../types";
 
@@ -14,8 +13,6 @@ const CARD_WIDTH = width * 0.35; // Larger size for trending cards
 
 const TrendingMovieCard = ({ movie, index }: TrendingMovieCardProps) => {
   const rankNumber = (index + 1).toString();
-
-  console.log(movie.poster_path);
 
   return (
     <View className="gap-2 relative" style={{ width: CARD_WIDTH }}>
@@ -52,7 +49,7 @@ const TrendingMovieCard = ({ movie, index }: TrendingMovieCardProps) => {
       </View>
 
       {/* Movie Title Meta */}
-      <View className="absolute bottom-0 p-2 bg-background/80 w-full">
+      <View className="absolute bottom-0 p-2 bg-background/80 w-full rounded-t-2xl">
         <Text className="text-white text-sm font-semibold" numberOfLines={2}>
           {movie.title}
         </Text>

@@ -11,6 +11,7 @@ export const trendingMovies: Movie[] = [
     overview: "",
     vote_average: 2,
     vote_count: 9,
+    genre: ["Action", "Adventure", "Sci-Fi"]
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ export const trendingMovies: Movie[] = [
     overview: "",
     vote_average: 2,
     vote_count: 9,
+    genre: ["Action", "Adventure", "Comedy"]
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ export const trendingMovies: Movie[] = [
     overview: "",
     vote_average: 2,
     vote_count: 9,
+    genre: ["Drama", "Family", "Adventure"]
   },
   {
     id: 4,
@@ -41,5 +44,6 @@ export const trendingMovies: Movie[] = [
     overview: "",
     vote_average: 2,
     vote_count: 9,
+    genre: ["Action", "Adventure", "Sci-Fi"]
   },
 ];

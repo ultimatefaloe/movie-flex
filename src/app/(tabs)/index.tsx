@@ -1,32 +1,81 @@
-import { useState } from "react";
+import EmptyState from "@/src/component/empty-state";
+import MovieCard from "@/src/component/movie-card";
+import TrendingMovieCard from "@/src/component/trending-movie-card";
+import { colors } from "@/src/constant";
+import { icons } from "@/src/constant/icons";
+import { movies, trendingMovies } from "@/src/data";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useRouter } from "expo-router";
+import { useState, useEffect } from "react";
 import {
   FlatList,
   Image,
   Text,
   TextInput,
   View,
-  useWindowDimensions,
+  ScrollView,
 } from "react-native";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { icons } from "@/src/constant/icons";
-import { movies, trendingMovies } from "@/src/data";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TrendingMovieCard from "@/src/component/trending-movie-card";
-import EmptyState from "@/src/component/empty-state";
-import MovieCard from "@/src/component/movie-card";
-import { colors } from "@/src/constant";
+import { TabButton } from "@/src/component/tab-button";
+
+const tabs = [
+  {
+    title: "All",
+    value: "all",
+  },
+  {
+    title: "Action",
+    value: "action",
+  },
+  {
+    title: "Comedy",
+    value: "comedy",
+  },
+  {
+    title: "Drama",
+    value: "drama",
+  },
+  {
+    title: "Horror",
+    value: "horror",
+  },
+  {
+    title: "Sci-Fi",
+    value: "sci-fi",
+  },
+];
 
 export default function App() {
+  const [ moviesData, setMoviesData ] = useState(movies);
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [active, setActive] = useState<
+    "all" | "action" | "comedy" | "drama" | "horror" | 'sci-fi'
+  >("all");
+  const router = useRouter();
+
   // Dynamically catch the tab bar footprint height to compute perfect padding thresholds
   let tabBarHeight = 0;
   try {
     tabBarHeight = useBottomTabBarHeight();
   } catch (e) {
     // Fallback static height padding if this screen isn't directly inside a Tab Navigator tree context
-    tabBarHeight = 80; 
+    tabBarHeight = 80;
   }
+
+  useEffect(() => {
+    if (active === "all") {
+      setMoviesData(movies);
+    } else {
+      const filteredMovies = movies.filter(
+        (movie) => movie.genre.map((g) => g.toLowerCase()).includes(active)
+      );
+      setMoviesData(filteredMovies);
+    }
+  }, [active]);
+
+  const routeToSearch = () => {
+    router.push(`/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+  };
 
   // Header Sub-Component Layer (Search Bar + First Carousel Slider)
   const renderHeader = () => (
@@ -34,7 +83,7 @@ export default function App() {
       <Text className="text-xl font-bold text-neutral">
         What do you want to watch?
       </Text>
-      
+
       {/* Search Input Input */}
       <View className="mt-4 relative mb-4">
         <Image
@@ -49,7 +98,7 @@ export default function App() {
           onChangeText={(text) => setSearchTerm(text)}
           returnKeyType="search"
           placeholderTextColor="#71717a"
-          onSubmitEditing={() => console.log("Searching for:", searchTerm)}
+          onSubmitEditing={routeToSearch}
         />
       </View>
 
@@ -69,45 +118,40 @@ export default function App() {
           contentContainerClassName="gap-4 pb-2"
         />
       </View>
-    </View>
-  );
-
-  // Footer Sub-Component Layer (Second Carousel Slider)
-  const renderFooter = () => (
-    <View className="mt-6">
-      <Text className="text-xl text-neutral font-semibold mb-2">
-        Recommended for You
-      </Text>
-      <FlatList
+      <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={trendingMovies}
-        keyExtractor={(item) => `trending-bottom-${item.id}`}
-        renderItem={({ item, index }) => (
-          <TrendingMovieCard movie={item} index={index} />
-        )}
-        contentContainerClassName="gap-4 pb-2"
-      />
+        contentContainerClassName="gap-2 mt-4"
+      >
+        {tabs.map((tab) => (
+          <TabButton
+            key={tab.value}
+            title={tab.title}
+            activeTab={active}
+            onPress={() => setActive(tab.value as any)}
+          />
+        ))}
+      </ScrollView>
     </View>
   );
 
   return (
     // Fixed Edge Configuration Array context
-    <SafeAreaView className="flex-1 bg-background" style={{ backgroundColor: colors.primary}} edges={['top']}>
+    <SafeAreaView
+      className="flex-1 bg-background"
+      style={{ backgroundColor: colors.primary }}
+      edges={["top"]}
+    >
       <FlatList
-        data={movies}
+        data={moviesData}
         keyExtractor={(item) => `grid-${item.id}`}
         renderItem={({ item }) => <MovieCard movie={item} />}
-        
         // 3-Column Grid Configuration Options
         numColumns={3}
         columnWrapperClassName="justify-between mb-4 gap-2"
-        
         // Component Structural Layout Placements
         ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
         ListEmptyComponent={<EmptyState />}
-        
         // Main Core Content Settings & Scrollable Extra Tab Padding
         showsVerticalScrollIndicator={false}
         className="px-5"
@@ -119,9 +163,6 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-
-
 
 // import { useState } from "react";
 // import {

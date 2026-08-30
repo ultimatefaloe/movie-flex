@@ -26,6 +26,7 @@ interface Movie {
   backdrop_path: ImageProps | null;
   vote_average: number;
   vote_count: number;
+  genre: string[];
 }
 
 export type { Movie };

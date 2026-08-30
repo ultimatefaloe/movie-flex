@@ -29,37 +29,14 @@ const MovieCard = ({ movie }: MoviecardProps) => {
       {/* Background Poster Image */}
       <Image
         source={
-          typeof movie.poster_path === "number"
-            ? movie.poster_path
-            : images.dog
+          typeof movie.poster_path === "number" ? movie.poster_path : images.dog
         }
         className="absolute inset-0 w-full h-full"
         resizeMode="cover"
       />
 
       {/* Dark overlay mix to ensure high contrast/readability */}
-      <View className="absolute inset-0 bg-background/40 justify-between">
-        {/* Top Badges Layer */}
-        <View className="flex-row justify-between items-center w-full">
-          {/* Rating Badge */}
-          <View className="bg-background/75 px-2 py-1 rounded-br-xl items-center flex-row gap-1">
-            <Image source={icons.star} className="h-3 w-3" />
-            <Text className="text-tint text-xs font-bold">
-              {movie.vote_average.toFixed(1)}
-            </Text>
-            <Text className="text-light-secondary text-[9px] mt-0.5">
-              ({movie.vote_count})
-            </Text>
-          </View>
-
-          {/* Release Year Badge */}
-          <View className="bg-black/75 px-2 py-1 rounded-xl">
-            <Text className="text-white text-xs font-semibold">
-              {releaseYear}
-            </Text>
-          </View>
-        </View>
-
+      <View className="absolute bottom-0 bg-background/40 justify-between">
         {/* Bottom Title & Details Segment */}
         <View className="bg-secondary/80 p-2.5 rounded-xl w-full">
           <Text
@@ -69,12 +46,22 @@ const MovieCard = ({ movie }: MoviecardProps) => {
             {movie.title}
           </Text>
 
-          <Text
-            className="text-light-secondary text-xs leading-4"
-            numberOfLines={2}
-          >
-            {displayOverview}
-          </Text>
+          <View className="flex-row justify-between items-center w-full">
+            {/* Rating Badge */}
+            <View className="items-center flex-row gap-1">
+              <Image source={icons.star} className="h-3 w-3" />
+              <Text className="text-tint text-xs font-bold">
+                {movie.vote_average.toFixed(1)}
+              </Text>
+            </View>
+
+            {/* Release Year Badge */}
+            <View className="bg-black/75 px-2 py-1 rounded-xl">
+              <Text className="text-white text-xs font-semibold">
+                {releaseYear}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </View>
