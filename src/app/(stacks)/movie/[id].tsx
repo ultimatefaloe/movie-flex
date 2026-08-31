@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import EmptyState from "@/src/component/ui/empty-state";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, images, icons } from "@/src/constant";
-import { ImageBackground, ScrollView, View, Text, Image } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Movie } from "@/src/types";
 import { TabButton } from "@/src/component/ui/tab-button";
 import { reviews, casts, movieDetail } from "@/src/data";
 import ReviewCard from "@/src/component/movie-detail/review-card";
 import CastCard from "@/src/component/movie-detail/cast-card";
+import Slider from "@react-native-community/slider";
 
 const actionMenu: { title: string; value: string }[] = [
   { title: "About Movie", value: "movie" },
@@ -20,10 +29,11 @@ const MovieDetail = () => {
   const [selectedAction, setSelectedAction] = useState<
     "movie" | "reviews" | "cast"
   >("movie");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
   const { id } = useLocalSearchParams();
   const movie: Movie = movieDetail(id as string);
 
-  console.log("MovieDetail movie:", movie);
   if (!movie) {
     return (
       <SafeAreaView
@@ -99,19 +109,17 @@ const MovieDetail = () => {
         </View>
 
         <View className="p-4">
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View className="flex-row gap-4">
-              {actionMenu.map((item) => (
-                <TabButton
-                  key={item.value}
-                  title={item.title}
-                  value={item.value}
-                  activeTab={selectedAction}
-                  onPress={() => setSelectedAction(item.value as any)}
-                />
-              ))}
-            </View>
-          </ScrollView>
+          <View className="flex-row gap-4 items-center justify-center">
+            {actionMenu.map((item) => (
+              <TabButton
+                key={item.value}
+                title={item.title}
+                value={item.value}
+                activeTab={selectedAction}
+                onPress={() => setSelectedAction(item.value as any)}
+              />
+            ))}
+          </View>
         </View>
 
         {/* tab content */}
@@ -129,14 +137,100 @@ const MovieDetail = () => {
             </View>
           )}
           {selectedAction === "cast" && (
-            <View className="px-4 grid grid-cols-2 gap-4">
+            <View className="flex-row flex-wrap px-4" style={{ gap: 16 }}>
               {casts.map((cast, index) => (
-                <CastCard key={index} cast={cast} />
+                <View key={index} style={{ width: "47%" }}>
+                  <CastCard cast={cast} />
+                </View>
               ))}
             </View>
           )}
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        className="p-4 bg-accent rounded-xl m-4 absolute bottom-4 left-4 right-4"
+        activeOpacity={0.7}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text className="text-neutral text-center text-xl font-bold">
+          Rate Movie
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-primary/80">
+          <View
+            className="bg-neutral rounded-t-3xl p-6 w-full"
+            // style={{ height: MODAL_HEIGHT }}
+          >
+            {/* Drag Handle */}
+            <View className="items-center mb-4">
+              <View className="w-12 h-1.5 bg-zinc-400 rounded-full" />
+            </View>
+
+            <Text className="text-primary text-2xl font-bold mb-4">
+              Rate this movie
+            </Text>
+
+            <View className="mb-6 flex-row items-center gap-2">
+              <Text className="text-light-secondary text-base ">
+                How would you rate this movie?
+              </Text>
+              <View className="flex-row items-center gap-1">
+                <Text className="text-tint text-lg font-bold">
+                  {rating.toFixed(1)}
+                </Text>
+                <Text className="text-light-secondary font-bold">/ 10.0</Text>
+              </View>
+            </View>
+
+            {/* Star Rating Options */}
+            <View className="flex-row justify-between mb-6">
+              <Slider
+                minimumValue={0}
+                maximumValue={10}
+                step={0.5}
+                value={rating}
+                onValueChange={(val: number) => setRating(val)}
+                minimumTrackTintColor={colors.tint}
+                maximumTrackTintColor={colors.accent}
+                thumbTintColor={colors.tint}
+                trackStyle={{ height: 4, borderRadius: 2 }}
+                thumbStyle={{ width: 20, height: 20, borderRadius: 10 }}
+              />
+            </View>
+
+            <View className="flex-row justify-between gap-4">
+              <TouchableOpacity
+                className="p-4 bg-light-secondary rounded-xl flex-1"
+                onPress={() => setModalVisible(false)}
+              >
+                <Text className="text-secondary text-center font-bold">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-accent p-4 rounded-xl flex-1"
+                onPress={() => {
+                  console.log("Submit rating", rating);
+                  setModalVisible(false);
+                }}
+              >
+                <Text className="text-neutral text-center font-bold text-lg">
+                  Submit Rating
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

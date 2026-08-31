@@ -1,6 +1,8 @@
 import { Stack } from "expo-router";
 import { colors, icons } from "@/src/constant";
-import { Image, Pressable } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
+import { addToWatchlist } from "@/src/service";
+import { movieDetail } from "@/src/data";
 
 export default function RootLayout() {
   return (
@@ -9,7 +11,8 @@ export default function RootLayout() {
         name="movie/[id]"
         getId={({ params }) => params?.id}
         options={({ route }) => {
-          const { title } = route.params as { id: string; title: string };
+          const { title, id } = route.params as { id: string; title: string };
+          const movie = movieDetail(id);
 
           return {
             title: title,
@@ -20,10 +23,11 @@ export default function RootLayout() {
             },
             headerTintColor: colors.neutral,
             headerRight: () => (
-              <Pressable
+              <TouchableOpacity
                 className="p-2"
                 hitSlop={10}
-                onPress={() => console.log("added to watch list")}
+                activeOpacity={0.7}
+                onPress={() => addToWatchlist(movie)}
               >
                 <Image
                   source={icons.watchlist}
@@ -31,7 +35,7 @@ export default function RootLayout() {
                   width={16}
                   height={24}
                 />
-              </Pressable>
+              </TouchableOpacity>
             ),
           };
         }}

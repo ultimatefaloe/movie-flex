@@ -11,4 +11,6 @@ export const icons = {
   calendar: require('../../assets/icons/calendar.png'),
   clock: require('../../assets/icons/clock.png'),
   ticket: require('../../assets/icons/ticket.png'),
+  back: require('../../assets/icons/back.png'),
+  delete: require('../../assets/icons/delete.png'),
 };

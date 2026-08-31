@@ -8,6 +8,7 @@ interface SearchInputProps {
   initialValue?: string;
   onClear?: () => void;
   onSubmit?: () => void;
+  editable?: boolean;
 }
 
 const SearchInput = ({
@@ -16,6 +17,7 @@ const SearchInput = ({
   initialValue,
   onClear,
   onSubmit,
+  editable = true,
 }: SearchInputProps) => {
   return (
     <View className="mt-4 relative mb-4">
@@ -46,6 +48,7 @@ const SearchInput = ({
         returnKeyType="search"
         placeholderTextColor="#71717a"
         onSubmitEditing={onSubmit}
+        editable={editable}
       />
     </View>
   );

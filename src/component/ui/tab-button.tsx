@@ -7,9 +7,9 @@ export const TabButton = ({
   onPress,
 }: {
   title: string;
-  value: string;
   activeTab: string;
   onPress: () => void;
+  value?: string;
 }) => {
   const isActive = activeTab === (value || title.toLowerCase());
 

@@ -9,7 +9,7 @@ import { movies, trendingMovies } from "@/src/data";
 import { tabBarHeight } from "@/src/utils";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { FlatList, ScrollView, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const tabs = [
@@ -59,7 +59,8 @@ export default function App() {
   }, [active]);
 
   const routeToSearch = () => {
-    router.push(`/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+    setSearchTerm("");
+    router.push(`/search`);
   };
 
   // Header Sub-Component Layer (Search Bar + First Carousel Slider)
@@ -71,11 +72,14 @@ export default function App() {
         </Text>
 
         {/* Search Input Input */}
-        <SearchInput
-          initialValue={searchTerm}
-          onSearch={setSearchTerm}
-          onSubmit={routeToSearch}
-        />
+        <Pressable onPress={routeToSearch} className="mt-4 relative">
+          <SearchInput
+            initialValue={searchTerm}
+            onSearch={setSearchTerm}
+            onSubmit={routeToSearch}
+            editable={false} // Add this prop
+          />
+        </Pressable>
 
         {/* Horizontal Carousel Section 1 */}
         <View className="pt-2">

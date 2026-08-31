@@ -1,12 +1,12 @@
-import { ImageProps } from "react-native";
+import {  ImageSourcePropType } from "react-native";
 
 interface MovieDetails {
   id: number;
   title: string;
   overview: string;
   release_date: string;
-  poster_path: ImageProps | null;
-  backdrop_path: ImageProps | null;
+  poster_path: ImageSourcePropType | null;
+  backdrop_path: ImageSourcePropType | null;
   vote_average: number;
   vote_count: number;
   genres: { id: number; name: string }[];
@@ -22,8 +22,8 @@ interface Movie {
   title: string;
   overview: string;
   release_date: string;
-  poster_path: ImageProps | null;
-  backdrop_path: ImageProps | null;
+  poster_path: ImageSourcePropType | null;
+  backdrop_path: ImageSourcePropType | null;
   vote_average: number;
   vote_count: number;
   runtime: number;
