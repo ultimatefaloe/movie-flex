@@ -1,22 +1,16 @@
-import EmptyState from "@/src/component/empty-state";
-import MovieCard from "@/src/component/movie-card";
-import TrendingMovieCard from "@/src/component/trending-movie-card";
+import EmptyState from "@/src/component/ui/empty-state";
+import MovieCard from "@/src/component/movie/movie-card";
+import TrendingMovieCard from "@/src/component/movie/trending-movie-card";
+import SearchInput from "@/src/component/ui/search-input";
+import { TabButton } from "@/src/component/ui/tab-button";
 import { colors } from "@/src/constant";
 import { icons } from "@/src/constant/icons";
 import { movies, trendingMovies } from "@/src/data";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { tabBarHeight } from "@/src/utils";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-} from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TabButton } from "@/src/component/tab-button";
 
 const tabs = [
   {
@@ -46,28 +40,19 @@ const tabs = [
 ];
 
 export default function App() {
-  const [ moviesData, setMoviesData ] = useState(movies);
+  const [moviesData, setMoviesData] = useState(movies);
   const [searchTerm, setSearchTerm] = useState("");
   const [active, setActive] = useState<
-    "all" | "action" | "comedy" | "drama" | "horror" | 'sci-fi'
+    "all" | "action" | "comedy" | "drama" | "horror" | "sci-fi"
   >("all");
   const router = useRouter();
-
-  // Dynamically catch the tab bar footprint height to compute perfect padding thresholds
-  let tabBarHeight = 0;
-  try {
-    tabBarHeight = useBottomTabBarHeight();
-  } catch (e) {
-    // Fallback static height padding if this screen isn't directly inside a Tab Navigator tree context
-    tabBarHeight = 80;
-  }
 
   useEffect(() => {
     if (active === "all") {
       setMoviesData(movies);
     } else {
-      const filteredMovies = movies.filter(
-        (movie) => movie.genre.map((g) => g.toLowerCase()).includes(active)
+      const filteredMovies = movies.filter((movie) =>
+        movie.genre.map((g) => g.toLowerCase()).includes(active),
       );
       setMoviesData(filteredMovies);
     }
@@ -78,61 +63,53 @@ export default function App() {
   };
 
   // Header Sub-Component Layer (Search Bar + First Carousel Slider)
-  const renderHeader = () => (
-    <View className="mb-4">
-      <Text className="text-xl font-bold text-neutral">
-        What do you want to watch?
-      </Text>
-
-      {/* Search Input Input */}
-      <View className="mt-4 relative mb-4">
-        <Image
-          source={icons.search}
-          className="absolute right-3 top-3.5 z-10 w-5 h-5 text-neutral"
-          resizeMode="contain"
-        />
-        <TextInput
-          placeholder="Search for movies..."
-          className="bg-secondary text-neutral placeholder:text-light-secondary p-3.5 pr-10 rounded-2xl"
-          value={searchTerm}
-          onChangeText={(text) => setSearchTerm(text)}
-          returnKeyType="search"
-          placeholderTextColor="#71717a"
-          onSubmitEditing={routeToSearch}
-        />
-      </View>
-
-      {/* Horizontal Carousel Section 1 */}
-      <View className="pt-2">
-        <Text className="text-xl text-neutral font-semibold mb-2">
-          Top Movies for the week
+  const renderHeader = useMemo(
+    () => (
+      <View className="mb-4">
+        <Text className="text-xl font-bold text-neutral">
+          What do you want to watch?
         </Text>
-        <FlatList
+
+        {/* Search Input Input */}
+        <SearchInput
+          initialValue={searchTerm}
+          onSearch={setSearchTerm}
+          onSubmit={routeToSearch}
+        />
+
+        {/* Horizontal Carousel Section 1 */}
+        <View className="pt-2">
+          <Text className="text-xl text-neutral font-semibold mb-2">
+            Top Movies for the week
+          </Text>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={trendingMovies}
+            keyExtractor={(item) => `trending-top-${item.id}`}
+            renderItem={({ item, index }) => (
+              <TrendingMovieCard movie={item} index={index} />
+            )}
+            contentContainerClassName="gap-4 pb-2"
+          />
+        </View>
+        <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={trendingMovies}
-          keyExtractor={(item) => `trending-top-${item.id}`}
-          renderItem={({ item, index }) => (
-            <TrendingMovieCard movie={item} index={index} />
-          )}
-          contentContainerClassName="gap-4 pb-2"
-        />
+          contentContainerClassName="gap-2 mt-4"
+        >
+          {tabs.map((tab) => (
+            <TabButton
+              key={tab.value}
+              title={tab.title}
+              activeTab={active}
+              onPress={() => setActive(tab.value as any)}
+            />
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName="gap-2 mt-4"
-      >
-        {tabs.map((tab) => (
-          <TabButton
-            key={tab.value}
-            title={tab.title}
-            activeTab={active}
-            onPress={() => setActive(tab.value as any)}
-          />
-        ))}
-      </ScrollView>
-    </View>
+    ),
+    [active, searchTerm],
   );
 
   return (
@@ -151,13 +128,19 @@ export default function App() {
         columnWrapperClassName="justify-between mb-4 gap-2"
         // Component Structural Layout Placements
         ListHeaderComponent={renderHeader}
-        ListEmptyComponent={<EmptyState />}
+        ListEmptyComponent={
+          <EmptyState
+            title="There is no movie yet!"
+            description="Find your movie by Type title, categories, years, etc "
+            icon={icons.empty}
+          />
+        }
         // Main Core Content Settings & Scrollable Extra Tab Padding
         showsVerticalScrollIndicator={false}
         className="px-5"
         contentContainerStyle={{
           paddingTop: 16,
-          paddingBottom: tabBarHeight + 24, // Pushes content above tab bar layout seamlessly
+          paddingBottom: tabBarHeight() + 24, // Pushes content above tab bar layout seamlessly
         }}
       />
     </SafeAreaView>

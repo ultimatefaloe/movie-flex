@@ -7,4 +7,6 @@ export const images = {
   sonic: require('../../assets/images/sonic.png'),
   spiderman2: require('../../assets/images/spiderman-2.png'),
   spiderman: require('../../assets/images/spiderman.png'),
+  bgImage: require('../../assets/images/bg-image.png'),
+
 }

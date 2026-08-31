@@ -2,20 +2,19 @@ import { Pressable, Text, View } from "react-native";
 
 export const TabButton = ({
   title,
+  value,
   activeTab,
   onPress,
 }: {
   title: string;
+  value: string;
   activeTab: string;
   onPress: () => void;
 }) => {
-  const isActive = activeTab === title.toLowerCase();
+  const isActive = activeTab === (value || title.toLowerCase());
 
   return (
-    <Pressable
-      className={`px-6 py-1 rounded-lg ${isActive && "bg-accent/10"}`}
-      onPress={onPress}
-    >
+    <Pressable className={`px-6 py-1 rounded-lg`} onPress={onPress}>
       <Text
         className={`text-light-secondary text-lg capitalize font-semibold ${
           isActive ? "text-neutral" : ""

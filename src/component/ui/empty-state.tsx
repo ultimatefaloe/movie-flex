@@ -1,13 +1,20 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
-import { icons } from "../constant";
+import { Image, ImageSourcePropType, Text, View } from "react-native";
+import { icons } from "@/src/constant";
 
-const EmptyState = () => {
+
+interface EmptyStateProps {
+  title: string;
+  description: string;
+  icon?: ImageSourcePropType;
+}
+
+const EmptyState = ({title, description, icon}: EmptyStateProps) => {
   return (
     <View className="flex-1 justify-center items-center text-center space-y-3">
-      <View>
+      <View className="bg-light-secondary/10 p-4 rounded-full mb-8">
         <Image
-          source={icons.empty}
+          source={icon || icons.empty}
           height={32}
           width={32}
           className=""
@@ -15,10 +22,10 @@ const EmptyState = () => {
         />
       </View>
       <Text className="text-neutral text-2xl font-bold">
-        There is no movie yet!
+        {title}
       </Text>
       <Text className="text-light-secondary text-base">
-        Find your movie by Type title, categories, years, etc 
+        {description}
       </Text>
     </View>
   );

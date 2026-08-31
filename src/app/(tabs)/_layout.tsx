@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
 import { colors } from "../../constant";
-import TabBarIcon from "@/src/component/tab-bar-icon";
+import TabBarIcon from "@/src/component/ui/tab-bar-icon";
 import { tabIcons } from "@/src/constant/tab-icons";
 const Layout = () => {
   return (

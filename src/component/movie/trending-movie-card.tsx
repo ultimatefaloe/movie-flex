@@ -1,7 +1,8 @@
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, View, Text, Dimensions } from "react-native";
-import { colors, images } from "../constant";
-import { Movie } from "../types";
+import { Dimensions, Image, Pressable, Text, View } from "react-native";
+import { colors, images } from "../../constant";
+import { Movie } from "../../types";
 
 interface TrendingMovieCardProps {
   movie: Movie;
@@ -12,10 +13,20 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.35; // Larger size for trending cards
 
 const TrendingMovieCard = ({ movie, index }: TrendingMovieCardProps) => {
+  const router = useRouter();
   const rankNumber = (index + 1).toString();
 
   return (
-    <View className="gap-2 relative" style={{ width: CARD_WIDTH }}>
+    <Pressable
+      className="gap-2 relative"
+      style={{ width: CARD_WIDTH }}
+      onPress={() =>
+        router.push({
+          pathname: `/movie/[id]`,
+          params: { title: movie.title, id: movie.id },
+        })
+      }
+    >
       {/* Card Image and Rank Container */}
       <View className="relative w-full" style={{ height: CARD_WIDTH * 1.5 }}>
         <Image
@@ -54,7 +65,7 @@ const TrendingMovieCard = ({ movie, index }: TrendingMovieCardProps) => {
           {movie.title}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

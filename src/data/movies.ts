@@ -8,6 +8,7 @@ const baseMovies: Movie[] = [
     poster_path: images.avengers,
     release_date: "21-4-1998",
     backdrop_path: null,
+    runtime: 143,
     overview: "Earth's mightiest heroes must come together to save the world from destruction.",
     vote_average: 8.5,
     vote_count: 15000,
@@ -22,6 +23,7 @@ const baseMovies: Movie[] = [
     overview: "A reclusive romance novelist on a book tour with her cover model gets swept up in a kidnapping attempt.",
     vote_average: 7.2,
     vote_count: 4500,
+    runtime: 143,
     genre: ["Action", "Adventure", "Comedy"],
   },
   {
@@ -33,6 +35,7 @@ const baseMovies: Movie[] = [
     overview: "A heartwarming tale of a dog and his owner's journey across the country.",
     vote_average: 7.8,
     vote_count: 3200,
+    runtime: 143,
     genre: ["Drama", "Family", "Adventure"],
   },
   {
@@ -44,6 +47,7 @@ const baseMovies: Movie[] = [
     overview: "A new theme park is built on the original site of Jurassic Park.",
     vote_average: 8.3,
     vote_count: 12000,
+    runtime: 143,
     genre: ["Action", "Adventure", "Sci-Fi"],
   },
 ];
@@ -59,3 +63,11 @@ export const movies: Movie[] = Array.from({ length: 50 }, (_, index) => {
     vote_count: Math.floor(baseMovie.vote_count * (0.7 + Math.random() * 0.6)),
   };
 });
+
+export const movieDetail: (id: string) => Movie = (id: string ) => {
+  const movie = movies.find((movie) => movie.id === parseInt(id));
+  if (!movie) {
+    throw new Error(`Movie with id ${id} not found`);
+  }
+  return movie;
+}

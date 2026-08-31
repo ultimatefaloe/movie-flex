@@ -1,7 +1,8 @@
+import { useRouter } from "expo-router";
 import React from "react";
-import { View, Text, Image, Dimensions } from "react-native";
-import { Movie } from "../types";
-import { icons, images } from "../constant";
+import { Dimensions, Image, Pressable, Text, View } from "react-native";
+import { icons, images } from "../../constant";
+import { Movie } from "../../types";
 
 interface MoviecardProps {
   movie: Movie;
@@ -11,20 +12,22 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.28; // Smaller size for regular movie cards
 
 const MovieCard = ({ movie }: MoviecardProps) => {
+  const router = useRouter();
   // Safely extract the year from the date format (e.g., "5234" from "21-4-5234")
   const releaseYear = movie.release_date
     ? movie.release_date.split("-")[2]
     : "N/A";
 
-  // Custom fallback text handling for empty string overviews
-  const displayOverview = movie.overview?.trim()
-    ? movie.overview
-    : "No overview summary is currently available for this title.";
-
   return (
-    <View
+    <Pressable
       className="bg-zinc-900 rounded-xl overflow-hidden shadow-sm relative"
       style={{ width: CARD_WIDTH, height: CARD_WIDTH * 1.5 }}
+      onPress={() =>
+        router.push({
+          pathname: `/movie/[id]`,
+          params: { title: movie.title, id: movie.id },
+        })
+      }
     >
       {/* Background Poster Image */}
       <Image
@@ -64,7 +67,7 @@ const MovieCard = ({ movie }: MoviecardProps) => {
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
