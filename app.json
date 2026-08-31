@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Movie FlexBox",
-    "slug": "movie-flix-box",
+    "slug": "movie-flix",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ultimatefaloe.movieflix"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a6932ac2-852e-4947-871c-6bbb881e70f4"
+      }
+    },
+    "owner": "ultimatefaloe"
   }
 }
